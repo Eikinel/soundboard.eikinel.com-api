@@ -25,8 +25,8 @@ public class FileManagerController {
         this.fileManagerService = fileManagerService;
     }
 
-    @GetMapping("")
-    public ResponseEntity<Resource> downloadFile(@RequestParam String fileName, HttpServletRequest request) {
+    @GetMapping("/{fileName:.+}")
+    public ResponseEntity<Resource> download(@PathVariable String fileName, HttpServletRequest request) {
         // Load file as Resource
         Resource resource = fileManagerService.load(fileName);
 
