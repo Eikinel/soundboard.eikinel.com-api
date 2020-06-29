@@ -4,16 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.io.File;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Button {
+@Document(collection = "buttons")
+public class ButtonDto {
     public String name;
     public String description;
-    public File file;
+    public String fileName;
     public String color;
 }
