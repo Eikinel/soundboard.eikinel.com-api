@@ -15,7 +15,7 @@
     <description>The API for the project soundboard.eikinel.com</description>
 
     <properties>
-        <java.version>14</java.version>
+        <java.version>11</java.version>
     </properties>
 
     <dependencies>
@@ -67,6 +67,11 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.30</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.java-json-tools</groupId>
+            <artifactId>json-patch</artifactId>
+            <version>1.13</version>
         </dependency>
     </dependencies>
 

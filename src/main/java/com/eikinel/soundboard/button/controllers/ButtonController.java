@@ -3,9 +3,10 @@ package com.eikinel.soundboard.button.controllers;
 import com.eikinel.soundboard.button.exceptions.ButtonFieldNotFoundException;
 import com.eikinel.soundboard.button.exceptions.ButtonNotFoundException;
 import com.eikinel.soundboard.button.models.ButtonDto;
-import com.eikinel.soundboard.button.models.ButtonPayload;
 import com.eikinel.soundboard.button.services.ButtonService;
-import com.eikinel.soundboard.fileManager.services.FileManagerService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,15 +24,11 @@ import java.util.List;
 public class ButtonController {
 
     private final ButtonService buttonService;
-    private final FileManagerService fileManagerService;
     private final Logger logger = LoggerFactory.getLogger(Slf4j.class);
 
     @Autowired
-    public ButtonController(
-            ButtonService buttonService,
-            FileManagerService fileManagerService) {
+    public ButtonController(ButtonService buttonService) {
         this.buttonService = buttonService;
-        this.fileManagerService = fileManagerService;
     }
 
     @GetMapping("/all")
@@ -39,8 +36,8 @@ public class ButtonController {
         return new ResponseEntity<>(buttonService.getAllButtons(), HttpStatus.OK);
     }
 
-    @GetMapping("")
-    public ResponseEntity<ButtonDto> getButtonById(@RequestParam("id") String id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<ButtonDto> getButtonById(@PathVariable String id) {
         final ButtonDto button = buttonService.getButtonById(id);
 
         if (ObjectUtils.isEmpty(button)) {
@@ -52,43 +49,29 @@ public class ButtonController {
         return new ResponseEntity<>(button, HttpStatus.FOUND);
     }
 
-//    @PostMapping("")
-//    public ResponseEntity<ButtonDto> createButton(@ModelAttribute ButtonPayload payload) {
-//        if (StringUtils.isEmpty(payload.file)) {
-//            logger.error("Required field 'file' does not exist. Payload -> {}", payload);
-//            throw new ButtonFieldNotFoundException(HttpStatus.BAD_REQUEST, "Required field 'file' does not exist");
-//        }
-//
-//        String fileName;
-//
-//        try {
-//            fileName = fileManagerService.store(payload.file);
-//        } catch (Exception e) {
-//            logger.error(e.getMessage());
-//            throw e;
-//        }
-//
-//        final ButtonDto createdButton = buttonService.create(payload.name, payload.description, fileName, payload.color);
-//
-//        logger.info("Created button -> {}", createdButton);
-//        return new ResponseEntity<>(createdButton, HttpStatus.CREATED);
-//    }
-
     @PostMapping("")
-    public ResponseEntity<ButtonDto> createButtonByFileName(@RequestBody ButtonDto button) {
+    public ResponseEntity<ButtonDto> createButton(@RequestBody ButtonDto button) {
         if (StringUtils.isEmpty(button.fileName)) {
             logger.error("Required field 'fileName' does not exist. Button -> {}", button);
             throw new ButtonFieldNotFoundException(HttpStatus.BAD_REQUEST, "Required field 'fileName' does not exist");
         }
 
-        final ButtonDto createdButton = buttonService.create(button.name, button.description, button.fileName, button.color);
+        final ButtonDto createdButton = buttonService.create(button);
 
         logger.info("Created button -> {}", createdButton);
         return new ResponseEntity<>(createdButton, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("")
-    public ResponseEntity<ButtonDto> deleteButton(@RequestParam("id") String id) {
+    @PatchMapping("/{id}")
+    public ResponseEntity<ButtonDto> patchButtonById(@PathVariable String id, @RequestBody ButtonDto button) {
+        final ButtonDto patchedButton = buttonService.patch(id, button);
+
+        logger.info("Patched button -> {}", patchedButton);
+        return new ResponseEntity<>(patchedButton, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ButtonDto> deleteButtonById(@PathVariable String id) {
         final ButtonDto button = buttonService.getButtonById(id);
 
         if (ObjectUtils.isEmpty(button)) {

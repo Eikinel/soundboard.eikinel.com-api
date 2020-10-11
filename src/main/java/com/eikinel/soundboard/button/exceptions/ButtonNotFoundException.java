@@ -7,4 +7,8 @@ public class ButtonNotFoundException extends ResponseStatusException {
     public ButtonNotFoundException(HttpStatus status) { super(status); }
     public ButtonNotFoundException(HttpStatus status, String message) { super(status, message); }
     public ButtonNotFoundException(HttpStatus status, String message, Throwable cause) { super(status, message, cause); }
+
+    public ButtonNotFoundException() {
+        super(HttpStatus.NOT_FOUND);
+    }
 }
