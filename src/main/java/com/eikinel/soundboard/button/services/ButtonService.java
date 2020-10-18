@@ -3,13 +3,9 @@ package com.eikinel.soundboard.button.services;
 import com.eikinel.soundboard.button.exceptions.ButtonNotFoundException;
 import com.eikinel.soundboard.button.models.ButtonDto;
 import com.eikinel.soundboard.button.repositories.ButtonRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -41,6 +37,7 @@ public class ButtonService {
         return buttonRepository.save(ButtonDto.builder()
                 .name(button.name)
                 .description(button.description)
+                .tags(button.tags)
                 .fileName(uploadDir + button.fileName)
                 .color(button.color)
                 .build()
@@ -54,6 +51,7 @@ public class ButtonService {
                 .id(buttonToUpdate.id)
                 .name(StringUtils.isEmpty(button.name) ? buttonToUpdate.name : button.name)
                 .description(StringUtils.isEmpty(button.description) ? buttonToUpdate.description : button.description)
+                .tags(button.tags)
                 .fileName(uploadDir + (StringUtils.isEmpty(button.fileName) ? buttonToUpdate.fileName : button.fileName))
                 .color(StringUtils.isEmpty(button.color) ? buttonToUpdate.color : button.color)
                 .build());

@@ -4,9 +4,6 @@ import com.eikinel.soundboard.button.exceptions.ButtonFieldNotFoundException;
 import com.eikinel.soundboard.button.exceptions.ButtonNotFoundException;
 import com.eikinel.soundboard.button.models.ButtonDto;
 import com.eikinel.soundboard.button.services.ButtonService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +30,7 @@ public class ButtonController {
 
     @GetMapping("/all")
     public ResponseEntity<List<ButtonDto>> getAllButtons() {
+        logger.info("List all buttons");
         return new ResponseEntity<>(buttonService.getAllButtons(), HttpStatus.OK);
     }
 
