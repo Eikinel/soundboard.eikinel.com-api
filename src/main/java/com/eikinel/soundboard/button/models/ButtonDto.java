@@ -14,10 +14,11 @@ import java.util.List;
 @NoArgsConstructor
 @Document(collection = "buttons")
 public class ButtonDto {
-    public String id;
-    public String name;
-    public List<TagDto> tags;
-    public String description;
-    public String fileName;
-    public String color;
+	public String id;
+	public String category;
+	public String name;
+	public List<TagDto> tags;
+	public String description;
+	public String fileName;
+	public String color;
 }

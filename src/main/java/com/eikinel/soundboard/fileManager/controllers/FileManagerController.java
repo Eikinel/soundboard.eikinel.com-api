@@ -18,45 +18,45 @@ import java.io.IOException;
 @RequestMapping("/file")
 public class FileManagerController {
 
-    private final FileManagerService fileManagerService;
+	private final FileManagerService fileManagerService;
 
-    @Autowired
-    public FileManagerController(FileManagerService fileManagerService) {
-        this.fileManagerService = fileManagerService;
-    }
+	@Autowired
+	public FileManagerController(FileManagerService fileManagerService) {
+		this.fileManagerService = fileManagerService;
+	}
 
-    @GetMapping("/{fileName:.+}")
-    public ResponseEntity<Resource> download(@PathVariable String fileName, HttpServletRequest request) {
-        // Load file as Resource
-        Resource resource = fileManagerService.load(fileName);
+	@GetMapping("/{fileName:.+}")
+	public ResponseEntity<Resource> download(@PathVariable String fileName, HttpServletRequest request) {
+		// Load file as Resource
+		Resource resource = fileManagerService.load(fileName);
 
-        // Try to determine file's content type
-        String contentType = null;
-        try {
-            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-        } catch (IOException ex) {
-//            logger.info("Could not determine file type.");
-        }
+		// Try to determine file's content type
+		String contentType = null;
+		try {
+			contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+		} catch (IOException ex) {
+//			logger.info("Could not determine file type.");
+		}
 
-        // Fallback to the default content type if type could not be determined
-        if(contentType == null) {
-            contentType = "application/octet-stream";
-        }
+		// Fallback to the default content type if type could not be determined
+		if (contentType == null) {
+			contentType = "application/octet-stream";
+		}
 
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(contentType))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-                .body(resource);
-    }
+		return ResponseEntity.ok()
+						.contentType(MediaType.parseMediaType(contentType))
+						.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+						.body(resource);
+	}
 
-    @PostMapping("")
-    public File upload(@RequestParam("file") MultipartFile file) {
-        String fileName = fileManagerService.store(file);
+	@PostMapping("")
+	public File upload(@RequestParam("file") MultipartFile file) {
+		String fileName = fileManagerService.store(file);
 
-        return File.builder()
-                .fileName(fileName)
-                .fileType(file.getContentType())
-                .size(file.getSize())
-                .build();
-    }
+		return File.builder()
+						.fileName(fileName)
+						.fileType(file.getContentType())
+						.size(file.getSize())
+						.build();
+	}
 }

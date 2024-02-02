@@ -9,8 +9,9 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ButtonPayload {
-    public String name;
-    public String description;
-    public MultipartFile file;
-    public String color;
+	public String name;
+	public String category;
+	public String description;
+	public MultipartFile file;
+	public String color;
 }
