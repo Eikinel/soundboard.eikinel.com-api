@@ -53,12 +53,18 @@ public class ButtonService {
 						.tags(button.tags)
 						.fileName(uploadDir + button.fileName)
 						.color(button.color)
+						.gain(button.gain)
 						.build()
 		);
 	}
 
 	public ButtonDto patch(String id, ButtonDto button) {
 		final ButtonDto buttonToUpdate = buttonRepository.findById(id).orElseThrow(ButtonNotFoundException::new);
+		final CategoryDto category = categoryService.getCategoryByName(button.category);
+
+		if (StringUtils.isEmpty(category)) {
+			categoryService.create(button.category);
+		}
 
 		return buttonRepository.save(ButtonDto.builder()
 						.id(buttonToUpdate.id)
@@ -68,6 +74,7 @@ public class ButtonService {
 						.tags(button.tags)
 						.fileName(uploadDir + (StringUtils.isEmpty(button.fileName) ? buttonToUpdate.fileName : button.fileName))
 						.color(StringUtils.isEmpty(button.color) ? buttonToUpdate.color : button.color)
+						.gain(StringUtils.isEmpty(button.gain) ? buttonToUpdate.gain : button.gain)
 						.build());
 	}
 

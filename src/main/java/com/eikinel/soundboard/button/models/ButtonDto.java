@@ -21,4 +21,6 @@ public class ButtonDto {
 	public String description;
 	public String fileName;
 	public String color;
+
+	public Float gain;
 }
