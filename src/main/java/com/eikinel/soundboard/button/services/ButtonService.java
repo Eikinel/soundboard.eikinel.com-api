@@ -70,7 +70,7 @@ public class ButtonService {
 			categoryService.create(button.category);
 		}
 
-		return buttonRepository.save(ButtonDto.builder()
+		final ButtonDto createdButton = buttonRepository.save(ButtonDto.builder()
 						.id(buttonToUpdate.id)
 						.name(StringUtils.isEmpty(button.name) ? buttonToUpdate.name : button.name)
 						.category(StringUtils.isEmpty(button.category) ? buttonToUpdate.category : button.category)
@@ -80,9 +80,19 @@ public class ButtonService {
 						.color(StringUtils.isEmpty(button.color) ? buttonToUpdate.color : button.color)
 						.gain(StringUtils.isEmpty(button.gain) ? buttonToUpdate.gain : button.gain)
 						.build());
+
+		if (ObjectUtils.isEmpty(this.getButtonsByCategory(buttonToUpdate.category))) {
+			categoryService.delete(buttonToUpdate.category);
+		}
+
+		return createdButton;
 	}
 
 	public void delete(ButtonDto button) {
 		buttonRepository.delete(button);
+
+		if (ObjectUtils.isEmpty(this.getButtonsByCategory(button.category))) {
+			categoryService.delete(button.category);
+		}
 	}
 }

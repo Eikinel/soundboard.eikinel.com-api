@@ -67,10 +67,6 @@ public class ButtonController {
 	public ResponseEntity<ButtonDto> patchButtonById(@PathVariable String id, @RequestBody ButtonDto button) {
 		final ButtonDto patchedButton = buttonService.patch(id, button);
 
-		if (ObjectUtils.isEmpty(buttonService.getButtonsByCategory(button.category))) {
-			categoryService.delete(button.category);
-		}
-
 		logger.info("Patched button -> {}", patchedButton);
 		return new ResponseEntity<>(patchedButton, HttpStatus.OK);
 	}
@@ -85,10 +81,6 @@ public class ButtonController {
 		}
 
 		buttonService.delete(button);
-
-		if (ObjectUtils.isEmpty(buttonService.getButtonsByCategory(button.category))) {
-			categoryService.delete(button.category);
-		}
 
 		logger.info("Deleted button -> {}", button);
 		return new ResponseEntity<>(button, HttpStatus.OK);
