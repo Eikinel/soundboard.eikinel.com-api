@@ -55,19 +55,4 @@ public class CategoryController {
 		logger.info("Found categories -> {}", categories.getContent());
 		return new ResponseEntity<>(categories, HttpStatus.OK);
 	}
-
-	@DeleteMapping("{id}")
-	public ResponseEntity<CategoryDto> deleteCategory(@PathVariable String id) {
-		final CategoryDto category = categoryService.getCategoryById(id);
-
-		if (ObjectUtils.isEmpty(category)) {
-			logger.error("Category with id {} not found", id);
-			throw new CategoryNotFoundException(HttpStatus.NOT_FOUND, "Category not found");
-		}
-
-		categoryService.delete(category);
-
-		logger.info("Deleted category -> {}", category);
-		return new ResponseEntity<>(category, HttpStatus.OK);
-	}
 }

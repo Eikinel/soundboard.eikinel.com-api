@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryService {
@@ -44,7 +45,9 @@ public class CategoryService {
 		return categoryRepository.findByNameContainingOrderByNameIgnoreCase(slice, PageRequest.of(page, size));
 	}
 
-	public void delete(CategoryDto tag) {
-		categoryRepository.delete(tag);
+	public void delete(String name) {
+		final Optional<CategoryDto> category = categoryRepository.findByName(name);
+
+		category.ifPresent(categoryRepository::delete);
 	}
 }

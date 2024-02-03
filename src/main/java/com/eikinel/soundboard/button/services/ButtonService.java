@@ -35,6 +35,10 @@ public class ButtonService {
 		return buttonRepository.findByName(name).orElse(null);
 	}
 
+	public List<ButtonDto> getButtonsByCategory(String category) {
+		return buttonRepository.findByCategory(category).orElse(null);
+	}
+
 	public ButtonDto getButtonById(String id) {
 		return buttonRepository.findById(id).orElse(null);
 	}
